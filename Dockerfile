@@ -1,8 +1,5 @@
 ARG NODE_VERSION=10
 FROM node:${NODE_VERSION}
-#pull the normal node-red-docker repo
-RUN git clone https://github.com/node-red/node-red-docker.git \
-    && cd node-red-docker
 # Home directory for Node-RED application source code.
 RUN mkdir -p /usr/src/node-red
 # User data directory, contains flows, config and nodes.
@@ -14,7 +11,9 @@ RUN useradd --home-dir /usr/src/node-red --no-create-home node-red \
     && chown -R node-red:node-red /usr/src/node-red
 USER node-red
 # package.json contains Node-RED NPM module and node dependencies
-COPY node-red-docker/package.json /usr/src/node-red/
+#pull the normal node-red-docker repo
+RUN git clone https://github.com/node-red/node-red-docker.git \
+    && cp node-red-docker/package.json /usr/src/node-red/
 RUN npm install
 # User configuration directory volume
 EXPOSE 1880
